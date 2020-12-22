@@ -1,18 +1,16 @@
-import express, {Request, Response, NextFunction } from 'express'
+import express from 'express'
 import bodyParser from 'body-parser'
 import router from './routes'
+import { Pilots, Vehicles } from './database'
+import auth from './utils/authorization'
 
 const app = express()
 
-
-
-var auth = function (req: Request, res: Response, next: NextFunction) {
-    if (req.header('Authorization')==='MOnkjnbB32143435795689754yuNEB'){
-        next()
-    }else {
-        res.status(401).send()
-    }
-    
+try {
+  Pilots.sync()
+  Vehicles.sync()
+} catch (e) {
+  console.log('Database synchronization error!')
 }
 
 app.use(auth)
